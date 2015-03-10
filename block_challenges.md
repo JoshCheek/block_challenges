@@ -106,8 +106,8 @@ If so, can you think of a reason you might have gotten a different answer than y
 
 <h2>There can only be one block argument</h2>
 
-Ruby only allows you to pass one block.
-This is built into [the structure of a method call](https://github.com/ruby/ruby/blob/c5c5e96643fd674cc44bf6c4f6edd965aa317c9e/vm_core.h#L164).
+Ruby only allows you to pass one block. This is built into
+[the structure of a method call](https://github.com/ruby/ruby/blob/c5c5e96643fd674cc44bf6c4f6edd965aa317c9e/vm_core.h#L164).
 
 For a bit about the history of why we have blocks,
 and why they are the way they are, see [this](http://devblog.avdi.org/2015/01/16/why-does-ruby-have-blocks/)
