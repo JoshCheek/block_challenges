@@ -68,7 +68,9 @@ Blocks are declared as the last argument.
 
 Can you define `have_some_args` so that it doesn't blow up?
 
-<div class="interactive-code">have_some_args(1, 2, 3) { 4 }</div>
+<div class="interactive-code">
+have_some_args(1, 2, 3) { 4 }
+</div>
 
 
 ## Blocks aren't counted with arity
