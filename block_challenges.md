@@ -73,6 +73,26 @@ Can you define `have_some_args` so that it doesn't blow up?
 
 
 ## Blocks aren't counted with arity
+
+Arity is the number of arguments that a method takes.
+
+What do you think the arity will be for these methods?
+Go ahead and guess,
+then mimic the first line against the other methods to find out if you're right.
+
+<div class="interactive-code">def a
+end
+puts method(:a).arity
+
+def b(arg)
+end
+
+def c(arg1, arg2)
+end
+
+def d(arg1, arg2, &block)
+end</div>
+
 ## There can only be one block argument
 
 ## Block param when no block is given
