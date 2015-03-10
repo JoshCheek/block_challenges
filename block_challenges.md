@@ -185,13 +185,75 @@ Does this code work the same if you receive the block in a parameter
 like we've been doing above?
 
 
-## Passing Arguments to blocks
-
-
-
 ## Return values
 
+Blocks, like methods (and basically all expresions in Ruby)
+return the value of the last line.
+
+<div class="interactive-code">block = lambda do
+  123
+  456
+end
+puts "Last line: #{block.call}"</div>
+
+### Experiments
+
+Figure out if this will work the same for `yield`.
+
+What would get returned if the block had nothing in it?
+Try it to make sure you're right!
+
+
+## Passing Arguments to blocks
+
+Blocks, like methods, can receive arguments.
+
+<div class="interactive-code">def gimme_moar_numbahz!(&block)
+  block.call(10)
+  block.call(100)
+  block.call(1000)
+end
+
+gimme_moar_numbahz! { |n| puts n + 1 }</div>
+
+Unlike methods, blocks don't care if you give the correct number of argumetnts.
+This is kind of like a JavaScript function.
+The case where we call it with `:a` and `:b`, it's pretty clear what to expect.
+But what about when we give it fewer or more?
+What do you expect to see? Are you correct?
+Can you explain what you're seeing?
+
+<div class="interactive-code">def moar_args_pls(&block)
+  block.call()
+  block.call(:a)
+  block.call(:a, :b)
+  block.call(:a, :b, :c)
+end
+
+moar_args_pls do |arg1, arg2|
+  puts "My args: #{arg1.inspect}, and #{arg2.inspect}"
+end</div>
+
+
+### Experiments
+
+How are a block's parameters stored?
+Here are some potentially useful methods you can try calling,
+in order to check if you are right:
+`global_variables`, `local_variables`, `instance_variables`, `Object.class_variables`
+
+If you figured out the one above, is it true for method parameters, too?
+
+Is this still true if you use `yield` instead of `block.call`?
+
+Can a block receive optional arguments?
+
+Can a block receive... a block?!?
+(did you think about [this](https://www.youtube.com/watch?v=IXLDv-fUINM), too?)
+
+
 ## Blocks don't give a shit about arguments
+## Blocks can see their surrounding environment
 ## Curly braces vs do/end
 ## Lambda blocks vs Proc blocks
 ## Passing blocks from a local variable
