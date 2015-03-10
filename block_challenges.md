@@ -373,6 +373,213 @@ and another that uses do/end?
 
 ## Lambda blocks vs Proc blocks vs Arrows
 
+So, some of the above is a bit of a lie.
+See, "Proc blocks" can behave as you've seen so far...
+but "Lambda blocks" behave like methods.
+You can find out what kind you have with the `lambda?` method:
+
+<div class="interactive-code">puts Proc.new { }.lambda?
+puts lambda { }.lambda?
+puts -> { }.lambda?</div>
+
+There are two ways that they can differ.
+The first is where return goes to.
+The second is how they deal with arguments.
+
+I'll show you how I would experiment to figure out how the return value works:
+See if you can't figure out how to verify the argument one
+(have you seen "wrong number of arguments" before? What did you do to get that?
+try doing that for the block and proc to see how they behave).
+
+<div class="interactive-code">def proc_return
+  Proc.new { return :from_block }.call
+  :from_method
+end
+
+def lambda_return
+  lambda { return :from_lambda }.call
+  :from_method
+end
+
+puts proc_return
+puts lambda_return</div>
+
+### Experiments
+
+What do you think this will return? `method(:puts).to_proc` can you prove it?
+
+Do both of these attributes (where return returns from, and how arguments match up)
+hold for both `lambda` and `->`?
+
+What if you define a method from a block?
+If you define a method from a block, can you get a method that behaves like a proc instead of a lambda?
+
+There's another method that does a similar thing: `proc` how does this one behave?
+If you have access to Ruby 1.8, run these same experiments there... do you get the same results?
+
 
 ## Passing blocks from a local variable
+
+Sometimes you have a block as a Proc in a local variables,
+and you have a method that wants a block.
+You can pass the block using the `&syntax` where you invoke it.
+
+What do you expect this to print?
+
+<div class="interactive-code">def block1(&block)
+  block2(&block)
+end
+
+def block2(&block)
+  block.call(1)
+end
+
+block1 { |n| puts "Got #{n}" }</div>
+
+
+### Experiments
+
+If you passed the block as a local variable, can the next method invoke it with yield?
+
+Can you do this with both Lambda style and Proc style blocks?
+
+Does this work with local variables you defined through `Proc.new` and `lambda`?
+
+Can you pass these blocks to things like `Array#map`?
+
+What will happen here? `[1,2,3].each(&method(:puts).to_proc)`
+
+What if you ran the above example without the `to_proc` method?
+Why might that have worked or not worked?
+Can you think of a way to check this?
+
+
+## Bindings return a binding into the block's closure
+
+There is a method that all objects inherit, called `binding`,
+which returns the current binding. This is where local variables are stored,
+and what determines what `self` is.
+
+This is made private, because it's implemented in such a way that implementation
+details leak out and it makes no goddam sense:
+
+<div class="interactive-code">puts Object.new.send(:binding).eval('self')
+</div>
+
+But you can call `binding` on a block, and it will give you a binding into its closure.
+
+<div class="interactive-code">def print_block_locals(&block)
+  p block.binding.eval('local_variables')
+end
+
+a, b = 1, 2
+print_block_locals { }</div>
+
+### Experiments
+
+If there were local variables in the block above,
+would it print them, as well?
+
+Find a way to get two different objects (you can check with `object_id`)
+to have a reference to the same block. Is their `self` the same?
+(You'll need to `eval("self")` on the block's binding, the same way we eval'd `local_variables`).
+
+## You can change the value of `self`
+
+So here's some black fucking magic for you.
+And I'm not telling you to go do this, because, I'm not your parents.
+But I want what's best for you, so I'll just tell you that metaprogramming is the devil's work,
+but your other instructors and I, we know that you're curious about these things,
+and all your friends are experimenting with metaprogramming.
+So, we'd rather you experiment here in school, where it's safe.
+
+So, we've seen `eval`, which, you've probably heard is evil,
+but if you really wanted to turn it up to eleven, then read on.
+A block [has a reference to self](https://github.com/ruby/ruby/blob/ab38e5b5851288753e841182f112d778d713dc91/vm_core.h#L524),
+So if Ruby exposed a way to change the value of self for a block... well...
+
+<div class="interactive-code">"abc".instance_eval { p self }
+123.instance_eval { p self }</div>
+
+Now, you'll quickly find yourself frustrated because you can't pass arguments to the block.
+There's a decent solution available, though. Try calling `methods` on the block,
+do you see any that look promising? (their names are similar to `instance_eval`,
+and you can filter the results by calling `grep` on them and passing it a regex).
+Can you find the method? Can you find its limitations? [Here's a hint](https://www.youtube.com/watch?v=IXLDv-fUINM).
+
+**WARNING** The following material may has been known to cause epistemological unsettledness.
+
+And now, if you really want to revel with the devil,
+figure out what the difference is between `instance_eval` and `class_eval/module_eval`.
+And then, to truly stare into the abyss,
+figure out how Ruby is able to accomodate these differences.
+Be sure to say goodbye to your loved ones.
+For one day, dear student, you may wake up wide-eyed and realize that metaprogramming is just programming.
+And all that shit you thought was programming? All those keywords?
+The `class`, the `module`, the `def`... how in the fuck do they pull that off?
+And then you will see: everything you believed is a lie.
+
+
+## The transition from Proc to block and back remembers what object it is
+
+Here's some more magic for you. When ou pass a Proc through the block slot,
+it retains its idenity on the other side.
+
+<div class="interactive-code">def m1(&b)
+  p b.object_id
+  m2(&b)
+end
+
+def m2(&b)
+  p b.object_id
+end
+
+m1 { }
+</div>
+
+
+## You can turn a method into a block, but not an unbound method
+
+So here's one that will seem strange at first.
+think about why this might be.
+
+<div class="interactive-code">def m(&b)
+  p b.call
+end
+
+# the method
+m(&method(:object_id))
+
+# the instance method bound to main
+m(&method(:object_id).owner.instance_method(:object_id).bind(self))
+
+# the unbound instance method
+m(&method(:object_id).owner.instance_method(:object_id))</div>
+
+
 ## Some challenges!
+
+Create a class that is initialized with a block,
+saves it in an instance variable,
+and doesn't invoke it until you call `omghi` on it.
+
+---
+
+Fill in the body of `b2` to get it to print 3.
+
+<div class="interactive-code">b1 = lambda { 2 }
+b2 = lambda {  } # what can you put in the block to get it to print 3?
+
+puts b2.call(1, &b1)</div>
+
+---
+
+Write your own map method: It takes an array and a block.
+Each item in the array is passed to the block.
+The method returns an array of items that were returned by the block.
+
+---
+
+Write your own select method: It takes an array and a block.
+Each item in the array is passed to the block.
+The method returns an array of items for which the block returned true.
