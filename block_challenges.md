@@ -1,23 +1,23 @@
 Block Challenges
 ================
 
-A block is a piece of code that can be executed later.
+<p>A block is a piece of code that can be executed later.
 Its behaviour is very very similar to a method's.
 You will know when you see a block, because it is always passed to a method,
 and it has either curly braces or `do/end` wrapped around it.
-Like `{ this }` and like `do this end`.
+Like `{ this }` and like `do this end`.</p>
 
 <h2>Passing/calling a block</h2>
 
-We pass a block to our code the same way we pass it to
-`#each` and `#map` and anywhere else that you've seen a block.
+<p>We pass a block to our code the same way we pass it to
+`#each` and `#map` and anywhere else that you've seen a block.</p>
 
-We receive the block with an ampersand.
-You can think of it like "& I'd like a block".
+<p>We receive the block with an ampersand.
+You can think of it like "& I'd like a block".</p>
 
-We invoke the block with `#call`.
+<p>We invoke the block with `#call`.
 In the same way we can call a method and pass it arguments,
-we can pass arguments to the block by passing them to `#call`.
+we can pass arguments to the block by passing them to `#call`.</p>
 
 <div class="interactive-code">class MahClass
   def gimme_numbahz(&block)
@@ -40,7 +40,7 @@ end</div>
 
 <h2>Every method takes a block</h2>
 
-Whether the method says so or not, it takes a block.
+<p>Whether the method says so or not, it takes a block.</p>
 
 <div class="interactive-code">def noblock_method
 end
@@ -57,18 +57,18 @@ block_call { puts "block_call" }</div>
 
 <h3>Experiments!!</h3>
 
-What would happen if you called the block twice in `block_call`?
+<p>What would happen if you called the block twice in `block_call`?</p>
 
-What would happen if you passed a block to `puts`,
+<p>What would happen if you passed a block to `puts`,
 `local_variables`, and `Object.class`?
-Why did that happen?
+Why did that happen?</p>
 
 
 <h2>Normal arguments and a block</h2>
 
-Blocks are declared as the last argument.
+<p>Blocks are declared as the last argument.</p>
 
-Can you define `have_some_args` so that it doesn't blow up?
+<p>Can you define `have_some_args` so that it doesn't blow up?</p>
 
 <div class="interactive-code">have_some_args(1, 2, 3) { 4 }
 </div>
@@ -76,14 +76,14 @@ Can you define `have_some_args` so that it doesn't blow up?
 
 <h2>Blocks aren't counted with arity</h2>
 
-Arity is the number of arguments that a method takes.
+<p>Arity is the number of arguments that a method takes.</p>
 
-What do you think the arity will be for these methods?
+<p>What do you think the arity will be for these methods?
 Go ahead and guess,
-then mimic the first line against the other methods to find out if you're right.
+then mimic the first line against the other methods to find out if you're right.</p>
 
-The last one is a little tricky,
-read the title of this section before you answer it :)
+<p>The last one is a little tricky,
+read the title of this section before you answer it :)</p>
 
 <div class="interactive-code">def a
 end
@@ -98,31 +98,32 @@ end
 def d(arg1, arg2, &block)
 end</div>
 
-Can you think of any other arugment types?
+<p>Can you think of any other arugment types?
 Are you able to guess how they affect arity?
 Were any of your guesses wrong?
-If so, can you think of a reason you might have gotten a different answer than you expected?
+If so, can you think of a reason you might have gotten a different answer than you expected?</p>
 
 
 <h2>There can only be one block argument</h2>
 
 <p>Ruby only allows you to pass one block. This is built into
-<a href="https://github.com/ruby/ruby/blob/c5c5e96643fd674cc44bf6c4f6edd965aa317c9e/vm_core.h#L164">the structure of a method call</a>.
+<a href="https://github.com/ruby/ruby/blob/c5c5e96643fd674cc44bf6c4f6edd965aa317c9e/vm_core.h#L164">the structure of a method call</a>.</p>
 
-For a bit about the history of why we have blocks,
-and why they are the way they are, see [this](http://devblog.avdi.org/2015/01/16/why-does-ruby-have-blocks/)
-great blog post by Avdi.
+<p>For a bit about the history of why we have blocks,
+and why they are the way they are, see <a href="http://devblog.avdi.org/2015/01/16/why-does-ruby-have-blocks/">this</a>
+great blog post by Avdi.</p>
 
-I'd try showing an example, but I'm not even sure what it would look like to try it.
+<p>I'd try showing an example, but I'm not even sure what it would look like to try it.</p>
 
-There was a pretty cool [Code Brawl](http://codebrawl.com/contests/methods-taking-multiple-blocks)
+<p>There was a pretty cool
+<a href="http://codebrawl.com/contests/methods-taking-multiple-blocks">Code Brawl</a>
 a while back where everyone submitted code to support the use case of multiple blocks.
-Some cool stuff in those gists :)
+Some cool stuff in those gists :)</p>
 
 <h2>Block param when no block is given</h2>
 
-Take a guess what you think this will be.
-Try passing a block, what do you think it will be?
+<p>Take a guess what you think this will be.
+Try passing a block, what do you think it will be?</p>
 
 <div class="interactive-code">def m(&block)
   p block
@@ -132,13 +133,13 @@ m</div>
 
 <h2>You can store blocks in a Proc</h2>
 
-So, you can't actually do anything with a block,
+<p>So, you can't actually do anything with a block,
 because it's not really an object (hence why you can only pass it to a method).
 This is, of course, problematic, so they created a class whose job is to wrap the block.
 That class is called `Proc`, and you can execute the code in the block with
 `Proc#call`. You can get access to one by taking it in a method,
 or by instantiating a `Proc` with a block, or by calling `lambda`,
-which is a private method available to all objects.
+which is a private method available to all objects.</p>
 
 <div class="interactive-code">def get_block(&block)
   block
@@ -156,14 +157,16 @@ block1.call
 
 <h2>Alternative way to work with blocks</h2>
 
-What we did above, is my favourite way to work with blocks,
+<p>What we did above, is my favourite way to work with blocks,
 because it handles everything that a block can do.
 But there is another syntax for working with blocks,
-you'll often see this in [Rails templates](https://github.com/rails/rails/blob/221e847a3bc4b6dc2559b4354417862b2e6c684a/railties/lib/rails/generators/rails/app/templates/app/views/layouts/application.html.erb.tt#L20).
+you'll often see this in
+<a href="https://github.com/rails/rails/blob/221e847a3bc4b6dc2559b4354417862b2e6c684a/railties/lib/rails/generators/rails/app/templates/app/views/layouts/application.html.erb.tt#L20.">Rails templates</a>
+</p>
 
-This syntax never turns the block into a local variable.
+<p>This syntax never turns the block into a local variable.
 Instead, you can use `block_given?` to see if the block exists,
-and `yield` to call the block.
+and `yield` to call the block.</p>
 
 <div class="interactive-code">def keywords_with_blocks
   if block_given?
@@ -178,19 +181,19 @@ keywords_with_blocks { puts "Block was called" }</div>
 
 <h3>Experiments</h3>
 
-What would happen if you yielded to the block when it wasn't given?
+<p>What would happen if you yielded to the block when it wasn't given?</p>
 
-How could you check whether the block was given if you received it in a parameter?
-Try it!
+<p>How could you check whether the block was given if you received it in a parameter?
+Try it!</p>
 
-Does this code work the same if you receive the block in a parameter
-like we've been doing above?
+<p>Does this code work the same if you receive the block in a parameter
+like we've been doing above?</p>
 
 
 <h2>Return values</h2>
 
-Blocks, like methods (and basically all expresions in Ruby)
-return the value of the last line.
+<p>Blocks, like methods (and basically all expresions in Ruby)
+return the value of the last line.</p>
 
 <div class="interactive-code">block = lambda do
   123
@@ -200,15 +203,15 @@ puts "Last line: #{block.call}"</div>
 
 <h3>Experiments</h3>
 
-Figure out if this will work the same for `yield`.
+<p>Figure out if this will work the same for `yield`.</p>
 
-What would get returned if the block had nothing in it?
-Try it to make sure you're right!
+<p>What would get returned if the block had nothing in it?
+Try it to make sure you're right!</p>
 
 
 <h2>Blocks don't give a shit about arguments</h2>
 
-Blocks, like methods, can receive arguments.
+<p>Blocks, like methods, can receive arguments.</p>
 
 <div class="interactive-code">def gimme_moar_numbahz!(&block)
   block.call(10)
@@ -218,12 +221,12 @@ end
 
 gimme_moar_numbahz! { |n| puts n + 1 }</div>
 
-Unlike methods, blocks don't care if you give the correct number of argumetnts.
+<p>Unlike methods, blocks don't care if you give the correct number of argumetnts.
 This is kind of like a JavaScript function.
 The case where we call it with `:a` and `:b`, it's pretty clear what to expect.
 But what about when we give it fewer or more?
 What do you expect to see? Are you correct?
-Can you explain what you're seeing?
+Can you explain what you're seeing?</p>
 
 <div class="interactive-code">def moar_args_pls(&block)
   block.call()
@@ -239,26 +242,26 @@ end</div>
 
 <h3>Experiments</h3>
 
-How are a block's parameters stored?
+<p>How are a block's parameters stored?
 Here are some potentially useful methods you can try calling,
 in order to check if you are right:
-`global_variables`, `local_variables`, `instance_variables`, `Object.class_variables`
+`global_variables`, `local_variables`, `instance_variables`, `Object.class_variables`</p>
 
-If you figured out the one above, is it true for method parameters, too?
+<p>If you figured out the one above, is it true for method parameters, too?</p>
 
-Is this still true if you use `yield` instead of `block.call`?
+<p>Is this still true if you use `yield` instead of `block.call`?</p>
 
-Can a block receive optional arguments?
+<p>Can a block receive optional arguments?</p>
 
-Can a block receive... a block?!?
-(did you think about [this](https://www.youtube.com/watch?v=IXLDv-fUINM), too?)
+<p>Can a block receive... a block?!?
+(did you think about <a href="https://www.youtube.com/watch?v=IXLDv-fUINM">this</a>, too?)</p>
 
 
 <h2>Destructuring arguments</h2>
 
-Get ready to "whaaaaa?! O.o"
+<p>Get ready to "whaaaaa?! O.o"
 So, block assignment is like local variable assignment.
-Here, we can use destructuring to extract arguments from an array.
+Here, we can use destructuring to extract arguments from an array.</p>
 
 <div class="interactive-code">a = [1, 2]
 p a
@@ -267,34 +270,34 @@ a, b = [1, 2]
 p a
 p b</div>
 
-You can have multiple layers of destructuring through parentheses.
+<p>You can have multiple layers of destructuring through parentheses.</p>
 
 <div class="interactive-code">(a, (b, c), (d, e)) = [1, [2, 3], [4, 5]]
 p a, b, c, d, e</div>
 
 <h3>Thoughts</h3>
 
-Where might something like this be useful?
+<p>Where might something like this be useful?</p>
 
 <h3>Experiments</h3>
 
-Hashes are key/value pairs. These are passed to the block as an array.
+<p>Hashes are key/value pairs. These are passed to the block as an array.
 Show that you can receive the pair if you want (the array),
-or use destructuring to get the key/value pair.
+or use destructuring to get the key/value pair.</p>
 
-Does this work for keyword arguments, too?
+<p>Does this work for keyword arguments, too?</p>
 
-Do methods work with this kind of assignment?
+<p>Do methods work with this kind of assignment?</p>
 
-Can you destructure three levels deep?
+<p>Can you destructure three levels deep?</p>
 
 
 <h2>Blocks can see their surrounding environment</h2>
 
-This is one of the coolest things about blocks.
+<p>This is one of the coolest things about blocks.
 They can see variables in their surrounding environment.
 We say that they "enclose" their environment,
-which is why they are called "closures".
+which is why they are called "closures".</p>
 
 <div class="interactive-code">def add_one(&block)
   puts block.call(1)
@@ -305,14 +308,14 @@ add_one { |arg| local_var + arg + 3 }</div>
 
 <h3>Thoughts</h3>
 
-Where have you seen things like this before?
-(think about the Enumerable methods)
+<p>Where have you seen things like this before?
+(think about the Enumerable methods)</p>
 
 <h3>Experiments</h3>
 
-Is this true for methods, too?
+<p>Is this true for methods, too?</p>
 
-Based on the answer to the above question, what do you think will happen with this code?
+<p>Based on the answer to the above question, what do you think will happen with this code?</p>
 
 <div class="interactive-code">var1 = 1
 def add_one
@@ -322,18 +325,18 @@ def add_one
 end
 add_one</div>
 
-Can blocks see instance variables, too?
+<p>Can blocks see instance variables, too?
 If so... well, we know that instance variables are stored on the instance,
 so what does that imply that `self` is?
 Were you correct?
-Try this in a few different contexts... does it hold?
+Try this in a few different contexts... does it hold?</p>
 
 <h2>Curly braces vs do/end</h2>
 
-For the most part, people treat curly braces and do/end as if they are interchangeable.
+<p>For the most part, people treat curly braces and do/end as if they are interchangeable.
 But there is one tricky difference. Curly braces will be passed as an argument to the
 method call directly to their left. But `do/end` will be passed as an argument to the
-method call farthest to their left.
+method call farthest to their left.</p>
 
 <div class="interactive-code"># The asterisk causes the method to ignore any arguments that are given to it
 # Not part of this material, but can you think of why this might be?
@@ -358,40 +361,40 @@ end
 
 <h3>Experiments</h3>
 
-What if you called `a b c` with curly braces and do/end?
+<p>What if you called `a b c` with curly braces and do/end?
 Which method do you think they would be assigned to?
-Try it to see if you are right :)
+Try it to see if you are right :)</p>
 
-If you wanted to use curly braces,
+<p>If you wanted to use curly braces,
 but didn't want the block to go to the method direclty to their left,
-what could you do to get them to be passed to the correct method?
+what could you do to get them to be passed to the correct method?</p>
 
-You've seen this before.
+<p>You've seen this before.
 Think about Rake tasks, have you ever seen curly braces in a rake task?
 If not, why not, and can you find a way to use curly braces instead of do/end?
 Think about RSpec test suites, can you define a test that uses curly braces,
-and another that uses do/end?
+and another that uses do/end?</p>
 
 
 <h2>Lambda blocks vs Proc blocks vs Arrows</h2>
 
-So, some of the above is a bit of a lie.
+<p>So, some of the above is a bit of a lie.
 See, "Proc blocks" can behave as you've seen so far...
 but "Lambda blocks" behave like methods.
-You can find out what kind you have with the `lambda?` method:
+You can find out what kind you have with the `lambda?` method:</p>
 
 <div class="interactive-code">puts Proc.new { }.lambda?
 puts lambda { }.lambda?
 puts -> { }.lambda?</div>
 
-There are two ways that they can differ.
+<p>There are two ways that they can differ.
 The first is where return goes to.
-The second is how they deal with arguments.
+The second is how they deal with arguments.</p>
 
-I'll show you how I would experiment to figure out how the return value works:
+<p>I'll show you how I would experiment to figure out how the return value works:
 See if you can't figure out how to verify the argument one
 (have you seen "wrong number of arguments" before? What did you do to get that?
-try doing that for the block and proc to see how they behave).
+try doing that for the block and proc to see how they behave).</p>
 
 <div class="interactive-code">def proc_return
   Proc.new { return :from_block }.call
@@ -408,25 +411,25 @@ puts lambda_return</div>
 
 <h3>Experiments</h3>
 
-What do you think this will return? `method(:puts).to_proc` can you prove it?
+<p>What do you think this will return? `method(:puts).to_proc` can you prove it?</p>
 
-Do both of these attributes (where return returns from, and how arguments match up)
-hold for both `lambda` and `->`?
+<p>Do both of these attributes (where return returns from, and how arguments match up)
+hold for both `lambda` and `->`?</p>
 
-What if you define a method from a block?
-If you define a method from a block, can you get a method that behaves like a proc instead of a lambda?
+<p>What if you define a method from a block?
+If you define a method from a block, can you get a method that behaves like a proc instead of a lambda?</p>
 
-There's another method that does a similar thing: `proc` how does this one behave?
-If you have access to Ruby 1.8, run these same experiments there... do you get the same results?
+<p>There's another method that does a similar thing: `proc` how does this one behave?
+If you have access to Ruby 1.8, run these same experiments there... do you get the same results?</p>
 
 
 <h2>Passing blocks from a local variable</h2>
 
-Sometimes you have a block as a Proc in a local variables,
+<p>Sometimes you have a block as a Proc in a local variables,
 and you have a method that wants a block.
-You can pass the block using the `&syntax` where you invoke it.
+You can pass the block using the `&syntax` where you invoke it.</p>
 
-What do you expect this to print?
+<p>What do you expect this to print?</p>
 
 <div class="interactive-code">def block1(&block)
   block2(&block)
@@ -441,34 +444,34 @@ block1 { |n| puts "Got #{n}" }</div>
 
 <h3>Experiments</h3>
 
-If you passed the block as a local variable, can the next method invoke it with yield?
+<p>If you passed the block as a local variable, can the next method invoke it with yield?</p>
 
-Can you do this with both Lambda style and Proc style blocks?
+<p>Can you do this with both Lambda style and Proc style blocks?</p>
 
-Does this work with local variables you defined through `Proc.new` and `lambda`?
+<p>Does this work with local variables you defined through `Proc.new` and `lambda`?</p>
 
-Can you pass these blocks to things like `Array#map`?
+<p>Can you pass these blocks to things like `Array#map`?</p>
 
-What will happen here? `[1,2,3].each(&method(:puts).to_proc)`
+<p>What will happen here? `[1,2,3].each(&method(:puts).to_proc)`</p>
 
-What if you ran the above example without the `to_proc` method?
+<p>What if you ran the above example without the `to_proc` method?
 Why might that have worked or not worked?
-Can you think of a way to check this?
+Can you think of a way to check this?</p>
 
 
 <h2>Bindings return a binding into the block's closure</h2>
 
-There is a method that all objects inherit, called `binding`,
+<p>There is a method that all objects inherit, called `binding`,
 which returns the current binding. This is where local variables are stored,
-and what determines what `self` is.
+and what determines what `self` is.</p>
 
-This is made private, because it's implemented in such a way that implementation
-details leak out and it makes no goddam sense:
+<p>This is made private, because it's implemented in such a way that implementation
+details leak out and it makes no goddam sense:</p>
 
 <div class="interactive-code">puts Object.new.send(:binding).eval('self')
 </div>
 
-But you can call `binding` on a block, and it will give you a binding into its closure.
+<p>But you can call `binding` on a block, and it will give you a binding into its closure.</p>
 
 <div class="interactive-code">def print_block_locals(&block)
   p block.binding.eval('local_variables')
@@ -479,39 +482,40 @@ print_block_locals { }</div>
 
 <h3>Experiments</h3>
 
-If there were local variables in the block above,
-would it print them, as well?
+<p>If there were local variables in the block above,
+would it print them, as well?</p>
 
-Find a way to get two different objects (you can check with `object_id`)
+<p>Find a way to get two different objects (you can check with `object_id`)
 to have a reference to the same block. Is their `self` the same?
-(You'll need to `eval("self")` on the block's binding, the same way we eval'd `local_variables`).
+(You'll need to `eval("self")` on the block's binding, the same way we eval'd `local_variables`).</p>
 
 <h2>You can change the value of `self`</h2>
 
-So here's some black fucking magic for you.
+<p>So here's some black fucking magic for you.
 And I'm not telling you to go do this, because, I'm not your parents.
 But I want what's best for you, so I'll just tell you that metaprogramming is the devil's work,
 but your other instructors and I, we know that you're curious about these things,
 and all your friends are experimenting with metaprogramming.
-So, we'd rather you experiment here in school, where it's safe.
+So, we'd rather you experiment here in school, where it's safe.</p>
 
-So, we've seen `eval`, which, you've probably heard is evil,
-but if you really wanted to turn it up to eleven, then read on.
-A block [has a reference to self](https://github.com/ruby/ruby/blob/ab38e5b5851288753e841182f112d778d713dc91/vm_core.h#L524),
-So if Ruby exposed a way to change the value of self for a block... well...
+<p>So, we've seen `eval`, which, you've probably heard is evil,
+but if you really wanted to turn it up to eleven, then read on. A block
+<a href="https://github.com/ruby/ruby/blob/ab38e5b5851288753e841182f112d778d713dc91/vm_core.h#L524">has a reference to self</a>,
+So if Ruby exposed a way to change the value of self for a block... well...</p>
 
 <div class="interactive-code">"abc".instance_eval { p self }
 123.instance_eval { p self }</div>
 
-Now, you'll quickly find yourself frustrated because you can't pass arguments to the block.
+<p>Now, you'll quickly find yourself frustrated because you can't pass arguments to the block.
 There's a decent solution available, though. Try calling `methods` on the block,
 do you see any that look promising? (their names are similar to `instance_eval`,
 and you can filter the results by calling `grep` on them and passing it a regex).
-Can you find the method? Can you find its limitations? [Here's a hint](https://www.youtube.com/watch?v=IXLDv-fUINM).
+Can you find the method? Can you find its limitations?
+<a href="https://www.youtube.com/watch?v=IXLDv-fUINM">Here's a hint</a>.</p>
 
-**WARNING** The following material may has been known to cause epistemological unsettledness.
+<p>**WARNING** The following material may has been known to cause epistemological unsettledness.</p>
 
-And now, if you really want to revel with the devil,
+<p>And now, if you really want to revel with the devil,
 figure out what the difference is between `instance_eval` and `class_eval/module_eval`.
 And then, to truly stare into the abyss,
 figure out how Ruby is able to accomodate these differences.
@@ -519,13 +523,13 @@ Be sure to say goodbye to your loved ones.
 For one day, dear student, you may wake up wide-eyed and realize that metaprogramming is just programming.
 And all that shit you thought was programming? All those keywords?
 The `class`, the `module`, the `def`... how in the fuck do they pull that off?
-And then you will see: everything you believed is a lie.
+And then you will see: everything you believed is a lie.</p>
 
 
 <h2>The transition from Proc to block and back remembers what object it is</h2>
 
-Here's some more magic for you. When ou pass a Proc through the block slot,
-it retains its idenity on the other side.
+<p>Here's some more magic for you. When ou pass a Proc through the block slot,
+it retains its idenity on the other side.</p>
 
 <div class="interactive-code">def m1(&b)
   p b.object_id
@@ -542,8 +546,8 @@ m1 { }
 
 <h2>You can turn a method into a block, but not an unbound method</h2>
 
-So here's one that will seem strange at first.
-think about why this might be.
+<p>So here's one that will seem strange at first.
+think about why this might be.</p>
 
 <div class="interactive-code">def m(&b)
   p b.call
@@ -561,13 +565,13 @@ m(&method(:object_id).owner.instance_method(:object_id))</div>
 
 <h2>Some challenges!</h2>
 
-Create a class that is initialized with a block,
+<p>Create a class that is initialized with a block,
 saves it in an instance variable,
-and doesn't invoke it until you call `omghi` on it.
+and doesn't invoke it until you call `omghi` on it.</p>
 
 ---
 
-Fill in the body of `b2` to get it to print 3.
+<p>Fill in the body of `b2` to get it to print 3.</p>
 
 <div class="interactive-code">b1 = lambda { 2 }
 b2 = lambda {  } # what can you put in the block to get it to print 3?
@@ -576,12 +580,12 @@ puts b2.call(1, &b1)</div>
 
 ---
 
-Write your own map method: It takes an array and a block.
+<p>Write your own map method: It takes an array and a block.
 Each item in the array is passed to the block.
-The method returns an array of items that were returned by the block.
+The method returns an array of items that were returned by the block.</p>
 
 ---
 
-Write your own select method: It takes an array and a block.
+<p>Write your own select method: It takes an array and a block.
 Each item in the array is passed to the block.
-The method returns an array of items for which the block returned true.
+The method returns an array of items for which the block returned true.</p>
