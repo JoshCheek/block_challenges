@@ -1,4 +1,5 @@
-# Block Challenges
+Block Challenges
+================
 
 A block is a piece of code that can be executed later.
 Its behaviour is very very similar to a method's.
@@ -6,7 +7,8 @@ You will know when you see a block, because it is always passed to a method,
 and it has either curly braces or `do/end` wrapped around it.
 Like `{ this }` and like `do this end`.
 
-## Passing/calling a block
+Passing/calling a block
+-----------------------
 
 We pass a block to our code the same way we pass it to
 `#each` and `#map` and anywhere else that you've seen a block.
@@ -36,7 +38,9 @@ mah_instance.gimme_numbahz do |n|
   puts "One of mah numbahz: #{n}"
 end</div>
 
-## Every method takes a block
+
+Every method takes a block
+--------------------------
 
 Whether the method says so or not, it takes a block.
 
@@ -62,7 +66,8 @@ What would happen if you passed a block to `puts`,
 Why did that happen?
 
 
-## Normal arguments and a block
+Normal arguments and a block
+----------------------------
 
 Blocks are declared as the last argument.
 
@@ -72,7 +77,8 @@ Can you define `have_some_args` so that it doesn't blow up?
 </div>
 
 
-## Blocks aren't counted with arity
+Blocks aren't counted with arity
+--------------------------------
 
 Arity is the number of arguments that a method takes.
 
@@ -102,7 +108,8 @@ Were any of your guesses wrong?
 If so, can you think of a reason you might have gotten a different answer than you expected?
 
 
-## There can only be one block argument
+There can only be one block argument
+------------------------------------
 
 Ruby only allows you to pass one block.
 This is built into [the structure of a method call](https://github.com/ruby/ruby/blob/c5c5e96643fd674cc44bf6c4f6edd965aa317c9e/vm_core.h#L164).
@@ -117,7 +124,8 @@ There was a pretty cool [Code Brawl](http://codebrawl.com/contests/methods-takin
 a while back where everyone submitted code to support the use case of multiple blocks.
 Some cool stuff in those gists :)
 
-## Block param when no block is given
+Block param when no block is given
+----------------------------------
 
 Take a guess what you think this will be.
 Try passing a block, what do you think it will be?
@@ -128,7 +136,8 @@ end
 
 m</div>
 
-## You can store blocks in a Proc
+You can store blocks in a Proc
+------------------------------
 
 So, you can't actually do anything with a block,
 because it's not really an object (hence why you can only pass it to a method).
@@ -152,7 +161,8 @@ block1.call
 # lambda {  }</div>
 
 
-## Alternative way to work with blocks
+Alternative way to work with blocks
+-----------------------------------
 
 What we did above, is my favourite way to work with blocks,
 because it handles everything that a block can do.
@@ -174,7 +184,7 @@ end
 keywords_with_blocks
 keywords_with_blocks { puts "Block was called" }</div>
 
-### Experiments
+<h3>Experiments</h3>
 
 What would happen if you yielded to the block when it wasn't given?
 
@@ -185,7 +195,8 @@ Does this code work the same if you receive the block in a parameter
 like we've been doing above?
 
 
-## Return values
+Return values
+-------------
 
 Blocks, like methods (and basically all expresions in Ruby)
 return the value of the last line.
@@ -196,7 +207,7 @@ return the value of the last line.
 end
 puts "Last line: #{block.call}"</div>
 
-### Experiments
+<h3>Experiments</h3>
 
 Figure out if this will work the same for `yield`.
 
@@ -235,7 +246,7 @@ moar_args_pls do |arg1, arg2|
 end</div>
 
 
-### Experiments
+<h3>Experiments</h3>
 
 How are a block's parameters stored?
 Here are some potentially useful methods you can try calling,
@@ -252,7 +263,8 @@ Can a block receive... a block?!?
 (did you think about [this](https://www.youtube.com/watch?v=IXLDv-fUINM), too?)
 
 
-## Destructuring arguments
+Destructuring arguments
+-----------------------
 
 Get ready to "whaaaaa?! O.o"
 So, block assignment is like local variable assignment.
@@ -270,11 +282,11 @@ You can have multiple layers of destructuring through parentheses.
 <div class="interactive-code">(a, (b, c), (d, e)) = [1, [2, 3], [4, 5]]
 p a, b, c, d, e</div>
 
-### Thoughts
+<h3>Thoughts</h3>
 
 Where might something like this be useful?
 
-### Experiments
+<h3>Experiments</h3>
 
 Hashes are key/value pairs. These are passed to the block as an array.
 Show that you can receive the pair if you want (the array),
@@ -287,7 +299,8 @@ Do methods work with this kind of assignment?
 Can you destructure three levels deep?
 
 
-## Blocks can see their surrounding environment
+Blocks can see their surrounding environment
+--------------------------------------------
 
 This is one of the coolest things about blocks.
 They can see variables in their surrounding environment.
@@ -301,12 +314,12 @@ end
 local_var = 2
 add_one { |arg| local_var + arg + 3 }</div>
 
-### Thoughts
+<h3>Thoughts</h3>
 
 Where have you seen things like this before?
 (think about the Enumerable methods)
 
-### Experiments
+<h3>Experiments</h3>
 
 Is this true for methods, too?
 
@@ -326,7 +339,8 @@ so what does that imply that `self` is?
 Were you correct?
 Try this in a few different contexts... does it hold?
 
-## Curly braces vs do/end
+Curly braces vs do/end
+----------------------
 
 For the most part, people treat curly braces and do/end as if they are interchangeable.
 But there is one tricky difference. Curly braces will be passed as an argument to the
@@ -354,7 +368,7 @@ end
 </div>
 
 
-### Experiments
+<h3>Experiments</h3>
 
 What if you called `a b c` with curly braces and do/end?
 Which method do you think they would be assigned to?
@@ -371,7 +385,8 @@ Think about RSpec test suites, can you define a test that uses curly braces,
 and another that uses do/end?
 
 
-## Lambda blocks vs Proc blocks vs Arrows
+Lambda blocks vs Proc blocks vs Arrows
+--------------------------------------
 
 So, some of the above is a bit of a lie.
 See, "Proc blocks" can behave as you've seen so far...
@@ -404,7 +419,7 @@ end
 puts proc_return
 puts lambda_return</div>
 
-### Experiments
+<h3>Experiments</h3>
 
 What do you think this will return? `method(:puts).to_proc` can you prove it?
 
@@ -418,7 +433,8 @@ There's another method that does a similar thing: `proc` how does this one behav
 If you have access to Ruby 1.8, run these same experiments there... do you get the same results?
 
 
-## Passing blocks from a local variable
+Passing blocks from a local variable
+------------------------------------
 
 Sometimes you have a block as a Proc in a local variables,
 and you have a method that wants a block.
@@ -437,7 +453,7 @@ end
 block1 { |n| puts "Got #{n}" }</div>
 
 
-### Experiments
+<h3>Experiments</h3>
 
 If you passed the block as a local variable, can the next method invoke it with yield?
 
@@ -454,7 +470,8 @@ Why might that have worked or not worked?
 Can you think of a way to check this?
 
 
-## Bindings return a binding into the block's closure
+Bindings return a binding into the block's closure
+--------------------------------------------------
 
 There is a method that all objects inherit, called `binding`,
 which returns the current binding. This is where local variables are stored,
@@ -475,7 +492,7 @@ end
 a, b = 1, 2
 print_block_locals { }</div>
 
-### Experiments
+<h3>Experiments</h3>
 
 If there were local variables in the block above,
 would it print them, as well?
@@ -484,7 +501,8 @@ Find a way to get two different objects (you can check with `object_id`)
 to have a reference to the same block. Is their `self` the same?
 (You'll need to `eval("self")` on the block's binding, the same way we eval'd `local_variables`).
 
-## You can change the value of `self`
+You can change the value of `self`
+----------------------------------
 
 So here's some black fucking magic for you.
 And I'm not telling you to go do this, because, I'm not your parents.
@@ -520,7 +538,8 @@ The `class`, the `module`, the `def`... how in the fuck do they pull that off?
 And then you will see: everything you believed is a lie.
 
 
-## The transition from Proc to block and back remembers what object it is
+The transition from Proc to block and back remembers what object it is
+----------------------------------------------------------------------
 
 Here's some more magic for you. When ou pass a Proc through the block slot,
 it retains its idenity on the other side.
@@ -538,7 +557,8 @@ m1 { }
 </div>
 
 
-## You can turn a method into a block, but not an unbound method
+You can turn a method into a block, but not an unbound method
+-------------------------------------------------------------
 
 So here's one that will seem strange at first.
 think about why this might be.
