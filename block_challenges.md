@@ -204,7 +204,7 @@ What would get returned if the block had nothing in it?
 Try it to make sure you're right!
 
 
-## Passing Arguments to blocks
+## Blocks don't give a shit about arguments
 
 Blocks, like methods, can receive arguments.
 
@@ -252,9 +252,127 @@ Can a block receive... a block?!?
 (did you think about [this](https://www.youtube.com/watch?v=IXLDv-fUINM), too?)
 
 
-## Blocks don't give a shit about arguments
+## Destructuring arguments
+
+Get ready to "whaaaaa?! O.o"
+So, block assignment is like local variable assignment.
+Here, we can use destructuring to extract arguments from an array.
+
+<div class="interactive-code">a = [1, 2]
+p a
+
+a, b = [1, 2]
+p a
+p b</div>
+
+You can have multiple layers of destructuring through parentheses.
+
+<div class="interactive-code">(a, (b, c), (d, e)) = [1, [2, 3], [4, 5]]
+p a, b, c, d, e</div>
+
+### Thoughts
+
+Where might something like this be useful?
+
+### Experiments
+
+Hashes are key/value pairs. These are passed to the block as an array.
+Show that you can receive the pair if you want (the array),
+or use destructuring to get the key/value pair.
+
+Does this work for keyword arguments, too?
+
+Do methods work with this kind of assignment?
+
+Can you destructure three levels deep?
+
+
 ## Blocks can see their surrounding environment
+
+This is one of the coolest things about blocks.
+They can see variables in their surrounding environment.
+We say that they "enclose" their environment,
+which is why they are called "closures".
+
+<div class="interactive-code">def add_one(&block)
+  puts block.call(1)
+end
+
+local_var = 2
+add_one { |arg| local_var + arg + 3 }</div>
+
+### Thoughts
+
+Where have you seen things like this before?
+(think about the Enumerable methods)
+
+### Experiments
+
+Is this true for methods, too?
+
+Based on the answer to the above question, what do you think will happen with this code?
+
+<div class="interactive-code">var1 = 1
+def add_one
+  var2 = 2
+  block = lambda { puts var1 + var2 + 3 }
+  block.call
+end
+add_one</div>
+
+Can blocks see instance variables, too?
+If so... well, we know that instance variables are stored on the instance,
+so what does that imply that `self` is?
+Were you correct?
+Try this in a few different contexts... does it hold?
+
 ## Curly braces vs do/end
-## Lambda blocks vs Proc blocks
+
+For the most part, people treat curly braces and do/end as if they are interchangeable.
+But there is one tricky difference. Curly braces will be passed as an argument to the
+method call directly to their left. But `do/end` will be passed as an argument to the
+method call farthest to their left.
+
+<div class="interactive-code"># The asterisk causes the method to ignore any arguments that are given to it
+# Not part of this material, but can you think of why this might be?
+def a(*)
+  puts "a: #{block_given?}"
+end
+
+def b(*)
+  puts "b: #{block_given?}"
+end
+
+def c(*)
+  puts "c: #{block_given?}"
+end
+
+a b { }
+puts "----------"
+a b do
+end
+</div>
+
+
+### Experiments
+
+What if you called `a b c` with curly braces and do/end?
+Which method do you think they would be assigned to?
+Try it to see if you are right :)
+
+If you wanted to use curly braces,
+but didn't want the block to go to the method direclty to their left,
+what could you do to get them to be passed to the correct method?
+
+You've seen this before.
+Think about Rake tasks, have you ever seen curly braces in a rake task?
+If not, why not, and can you find a way to use curly braces instead of do/end?
+Think about RSpec test suites, can you define a test that uses curly braces,
+and another that uses do/end?
+
+
+## Lambda blocks vs Proc blocks vs Arrows
+
+
 ## Passing blocks from a local variable
 ## Some challenges!
