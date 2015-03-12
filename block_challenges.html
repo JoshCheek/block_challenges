@@ -10,16 +10,22 @@ Like <code>{ this }</code> and like <code>do this end</code>.
 
 <h2>Passing/calling a block</h2>
 
+<p>
 We pass a block to our code the same way we pass it to
 <code>#each</code> and <code>#map</code>
 and anywhere else that you've seen a block.
+</p>
 
+<p>
 We receive the block with an ampersand.
 You can think of it like "&amp; I'd like a block".
+</p>
 
+<p>
 We invoke the block with <code>#call</code>.
 In the same way we can call a method and pass it arguments,
 we can pass arguments to the block by passing them to <code>#call</code>.
+</p>
 
 <div class="interactive-code">class MahClass
   def gimme_numbahz(&block)
@@ -38,3 +44,37 @@ mah_instance = MahClass.new
 mah_instance.gimme_numbahz do |n|
   puts "One of mah numbahz: #{n}"
 end</div>
+
+<h2>Every method takes a block</h2>
+
+<p>
+Whether the method says so or not, it takes a block.
+</p>
+
+<div class="interactive-code">def noblock_method
+end
+noblock_method { puts "noblock_method" }
+
+def block_method(&block)
+end
+block_method { puts "block_method" }
+
+def block_call(&block)
+  block.call
+end
+block_call { puts "block_call" }</div>
+
+<h3>Experiments!!</h3>
+
+<p>
+What would happen if you called the block twice in <code>block_call</code>?
+<p>
+
+<p>
+What would happen if you passed a block to <code>puts</code>,
+<code>local_variables</code>, and <code>Object.class</code>?
+Why did that happen?
+<p>
+
+
+<h2>Normal arguments and a block</h2>
