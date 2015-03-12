@@ -21,7 +21,7 @@ We invoke the block with <code>#call</code>.
 In the same way we can call a method and pass it arguments,
 we can pass arguments to the block by passing them to <code>#call</code>.
 
-<code class="interactive-code">class MahClass
+<div class="interactive-code">class MahClass
   def gimme_numbahz(&block)
     block.call 123
     block.call 456
@@ -37,4 +37,4 @@ end
 mah_instance = MahClass.new
 mah_instance.gimme_numbahz do |n|
   puts "One of mah numbahz: #{n}"
-end</code>
+end</div>
