@@ -4,7 +4,7 @@
 A block is a piece of code that can be executed later.
 Its behaviour is very very similar to a method's.
 You will know when you see a block, because it is always passed to a method,
-and it has either curly braces or <code>do/end<code> wrapped around it.
+and it has either curly braces or <code>do/end</code> wrapped around it.
 Like <code>{ this }</code> and like <code>do this end</code>.
 </p>
 
@@ -78,3 +78,125 @@ Why did that happen?
 
 
 <h2>Normal arguments and a block</h2>
+
+<p>
+Blocks are declared as the last argument.
+<p>
+
+<p>
+Can you define <code>have_some_args</code> so that it doesn't blow up?
+<p>
+
+<div class="interactive-code">have_some_args(1, 2, 3) { 4 }
+</div>
+
+
+<h2>Blocks aren't counted with arity</h2>
+
+<p>
+Arity is the number of arguments that a method takes.
+<p>
+
+<p>
+What do you think the arity will be for these methods?
+Go ahead and guess,
+then mimic the first line against the other methods to find out if you're right.
+<p>
+
+<p>
+The last one is a little tricky,
+read the title of this section before you answer it :)
+<p>
+
+<div class="interactive-code">def a
+end
+puts method(:a).arity
+
+def b(arg)
+end
+
+def c(arg1, arg2)
+end
+
+def d(arg1, arg2, &block)
+end</div>
+
+<p>
+Can you think of any other arugment types?
+Are you able to guess how they affect arity?
+Were any of your guesses wrong?
+If so, can you think of a reason you might have gotten a different answer than you expected?
+<p>
+
+
+<h2>There can only be one block argument</h2>
+
+<p>Ruby only allows you to pass one block. This is built into
+<a href="https://github.com/ruby/ruby/blob/c5c5e96643fd674cc44bf6c4f6edd965aa317c9e/vm_core.h#L164">the structure of a method call</a>.
+
+<p>
+For a bit about the history of why we have blocks,
+and why they are the way they are, see
+<a href="http://devblog.avdi.org/2015/01/16/why-does-ruby-have-blocks/">this</a>
+great blog post by Avdi.
+<p>
+
+<p>
+I'd try showing an example, but I'm not even sure what it would look like to try it.
+<p>
+
+<p>
+There was a pretty cool
+<a href="http://codebrawl.com/contests/methods-taking-multiple-blocks">Code Brawl</a>
+a while back where everyone submitted code to support the use case of multiple blocks.
+Some cool stuff in those gists :)
+<p>
+
+<h2>Block param when no block is given</h2>
+
+<p>
+Take a guess what you think this will be.
+Try passing a block, what do you think it will be?
+<p>
+
+<div class="interactive-code">def m(&block)
+  p block
+end
+
+m</div>
+
+<h2>You can store blocks in a Proc</h2>
+
+<p>
+So, you can't actually do anything with a block,
+because it's not really an object (hence why you can only pass it to a method).
+This is, of course, problematic, so they created a class whose job is to wrap the block.
+That class is called <code>Proc</code>, and you can execute the code in the block with
+<code>Proc#call</code>. You can get access to one by taking it in a method,
+or by instantiating a <code>Proc</code> with a block, or by calling <code>lambda</code>,
+which is a private method available to all objects.
+<p>
+
+<div class="interactive-code">def get_block(&block)
+  block
+end
+
+block1 = get_block { puts 'block 1' }
+puts block1.class
+block1.call
+
+# can you show that these create Proc objects
+# And can be invoked with `Proc#call`, like the one above?
+# Proc.new { }
+# lambda {  }</div>
+
+
+<h2>Alternative way to work with blocks</h2>
+
+<p>
+What we did above, is my favourite way to work with blocks,
+because it handles everything that a block can do.
+But there is another syntax for working with blocks,
+you'll often see this in
+<a href="https://github.com/rails/rails/blob/221e847a3bc4b6dc2559b4354417862b2e6c684a/railties/lib/rails/generators/rails/app/templates/app/views/layouts/application.html.erb.tt#L20">Rails templates</a>.
+<p>
