@@ -129,29 +129,6 @@ If so, can you think of a reason you might have gotten a different answer than y
 <p>
 
 
-<h2>There can only be one block argument</h2>
-
-<p>Ruby only allows you to pass one block. This is built into
-<a href="https://github.com/ruby/ruby/blob/c5c5e96643fd674cc44bf6c4f6edd965aa317c9e/vm_core.h#L164">the structure of a method call</a>.
-
-<p>
-For a bit about the history of why we have blocks,
-and why they are the way they are, see
-<a href="http://devblog.avdi.org/2015/01/16/why-does-ruby-have-blocks/">this</a>
-great blog post by Avdi.
-<p>
-
-<p>
-I'd try showing an example, but I'm not even sure what it would look like to try it.
-<p>
-
-<p>
-There was a pretty cool
-<a href="http://codebrawl.com/contests/methods-taking-multiple-blocks">Code Brawl</a>
-a while back where everyone submitted code to support the use case of multiple blocks.
-Some cool stuff in those gists :)
-<p>
-
 <h2>Block param when no block is given</h2>
 
 <p>
@@ -169,12 +146,17 @@ m</div>
 
 <p>
 So, you can't actually do anything with a block,
-because it's not really an object (hence why you can only pass it to a method).
-This is, of course, problematic, so they created a class whose job is to wrap the block.
-That class is called <code>Proc</code>, and you can execute the code in the block with
-<code>Proc#call</code>. You can get access to one by taking it in a method,
+because it's not really an object.
+To allow you to work with it, they created a class, <code>Proc</code>,
+whose job is to wrap the block.
+You can execute the block with
+<code>Proc#call</code>.
+</p>
+
+<p>
+You can get access to one by taking it in a method,
 or by instantiating a <code>Proc</code> with a block, or by calling <code>lambda</code>,
-which is a private method available to all objects.
+a private method available to all objects.
 <p>
 
 <div class="interactive-code">def get_block(&block)
@@ -204,7 +186,7 @@ you'll often see this in
 <p>
 This syntax never turns the block into a local variable.
 Instead, you can use <code>block_given?</code> to see if the block exists,
-    and <code>yield</code> to call the block.
+and <code>yield</code> to call the block.
 <p>
 
 <div class="interactive-code">def keywords_with_blocks
