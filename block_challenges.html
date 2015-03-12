@@ -200,3 +200,574 @@ But there is another syntax for working with blocks,
 you'll often see this in
 <a href="https://github.com/rails/rails/blob/221e847a3bc4b6dc2559b4354417862b2e6c684a/railties/lib/rails/generators/rails/app/templates/app/views/layouts/application.html.erb.tt#L20">Rails templates</a>.
 <p>
+
+<p>
+This syntax never turns the block into a local variable.
+Instead, you can use <code>block_given?</code> to see if the block exists,
+    and <code>yield</code> to call the block.
+<p>
+
+<div class="interactive-code">def keywords_with_blocks
+  if block_given?
+    yield
+  else
+    puts "No block given!"
+  end
+end
+
+keywords_with_blocks
+keywords_with_blocks { puts "Block was called" }</div>
+
+<h3>Experiments</h3>
+
+<p>
+What would happen if you yielded to the block when it wasn't given?
+<p>
+
+<p>
+How could you check whether the block was given if you received it in a parameter?
+Try it!
+<p>
+
+<p>
+Does this code work the same if you receive the block in a parameter
+like we've been doing above?
+<p>
+
+
+<h2>Return values</h2>
+
+<p>
+Blocks, like methods (and basically all expresions in Ruby)
+return the value of the last line.
+<p>
+
+<div class="interactive-code">block = lambda do
+  123
+  456
+end
+puts "Last line: #{block.call}"</div>
+
+<h3>Experiments</h3>
+
+<p>
+Figure out if this will work the same for <code>yield</code>.
+<p>
+
+<p>
+What would get returned if the block had nothing in it?
+Try it to make sure you're right!
+<p>
+
+
+<h2>Blocks don't give a shit about arguments</h2>
+
+<p>
+Blocks, like methods, can receive arguments.
+<p>
+
+<div class="interactive-code">def gimme_moar_numbahz!(&block)
+  block.call(10)
+  block.call(100)
+  block.call(1000)
+end
+
+gimme_moar_numbahz! { |n| puts n + 1 }</div>
+
+<p>
+Unlike methods, blocks don't care if you give the correct number of argumetnts.
+This is kind of like a JavaScript function.
+The case where we call it with <code>:a</code> and <code>:b</code>,
+it's pretty clear what to expect.
+But what about when we give it fewer or more?
+What do you expect to see? Are you correct?
+Can you explain what you're seeing?
+<p>
+
+<div class="interactive-code">def moar_args_pls(&block)
+  block.call()
+  block.call(:a)
+  block.call(:a, :b)
+  block.call(:a, :b, :c)
+end
+
+moar_args_pls do |arg1, arg2|
+  puts "My args: #{arg1.inspect}, and #{arg2.inspect}"
+end</div>
+
+
+<h3>Experiments</h3>
+
+<p>
+How are a block's parameters stored?
+Here are some potentially useful methods you can try calling,
+in order to check if you are right:
+<code>global_variables</code>,
+<code>local_variables</code>,
+<code>instance_variables</code>,
+<code>Object.class_variables</code>
+<p>
+
+<p>
+If you figured out the one above, is it true for method parameters, too?
+<p>
+
+<p>
+Is this still true if you use <code>yield</code>
+instead of <code>block.call</code>?
+<p>
+
+<p>
+Can a block receive optional arguments?
+<p>
+
+<p>
+Can a block receive... a block?!?
+(did you think about
+<a href="https://www.youtube.com/watch?v=IXLDv-fUINM">this</a>,
+too?)
+<p>
+
+
+<h2>Destructuring arguments</h2>
+
+<p>
+Get ready to "whaaaaa?! O.o"
+So, block assignment is like local variable assignment.
+Here, we can use destructuring to extract arguments from an array.
+<p>
+
+<div class="interactive-code">a = [1, 2]
+p a
+
+a, b = [1, 2]
+p a
+p b</div>
+
+<p>
+You can have multiple layers of destructuring through parentheses.
+<p>
+
+<div class="interactive-code">(a, (b, c), (d, e)) = [1, [2, 3], [4, 5]]
+p a, b, c, d, e</div>
+
+<h3>Thoughts</h3>
+
+<p>
+Where might something like this be useful?
+<p>
+
+<h3>Experiments</h3>
+
+<p>
+Hashes are key/value pairs. These are passed to the block as an array.
+Show that you can receive the pair if you want (the array),
+or use destructuring to get the key/value pair.
+<p>
+
+<p>
+Does this work for keyword arguments, too?
+<p>
+
+<p>
+Do methods work with this kind of assignment?
+<p>
+
+<p>
+Can you destructure three levels deep?
+<p>
+
+
+<h2>Blocks can see their surrounding environment</h2>
+
+<p>
+This is one of the coolest things about blocks.
+They can see variables in their surrounding environment.
+We say that they "enclose" their environment,
+which is why they are called "closures".
+<p>
+
+<div class="interactive-code">def add_one(&block)
+  puts block.call(1)
+end
+
+local_var = 2
+add_one { |arg| local_var + arg + 3 }</div>
+
+<h3>Thoughts</h3>
+
+<p>
+Where have you seen things like this before?
+(think about the Enumerable methods)
+<p>
+
+<h3>Experiments</h3>
+
+<p>
+Is this true for methods, too?
+<p>
+
+<p>
+Based on the answer to the above question, what do you think will happen with this code?
+<p>
+
+<div class="interactive-code">var1 = 1
+def add_one
+  var2 = 2
+  block = lambda { puts var1 + var2 + 3 }
+  block.call
+end
+add_one</div>
+
+<p>
+Can blocks see instance variables, too?
+If so... well, we know that instance variables are stored on the instance,
+so what does that imply that <code>self</code> is?
+Were you correct?
+Try this in a few different contexts... does it hold?
+<p>
+
+<h2>Curly braces vs do/end</h2>
+
+<p>
+For the most part, people treat curly braces and do/end as if they are interchangeable.
+But there is one tricky difference. Curly braces will be passed as an argument to the
+method call directly to their left. But <code>do/end</code>
+will be passed as an argument to the
+method call farthest to their left.
+<p>
+
+<div class="interactive-code"># The asterisk causes the method to ignore any arguments that are given to it
+# Not part of this material, but can you think of why this might be?
+def a(*)
+  puts "a: #{block_given?}"
+end
+
+def b(*)
+  puts "b: #{block_given?}"
+end
+
+def c(*)
+  puts "c: #{block_given?}"
+end
+
+a b { }
+puts "----------"
+a b do
+end
+</div>
+
+
+<h3>Experiments</h3>
+
+<p>
+What if you called <code>a b c</code>
+with curly braces and do/end?
+Which method do you think they would be assigned to?
+Try it to see if you are right :)
+<p>
+
+<p>
+If you wanted to use curly braces,
+but didn't want the block to go to the method direclty to their left,
+what could you do to get them to be passed to the correct method?
+<p>
+
+<p>
+You've seen this before.
+Think about Rake tasks, have you ever seen curly braces in a rake task?
+If not, why not, and can you find a way to use curly braces instead of do/end?
+Think about RSpec test suites, can you define a test that uses curly braces,
+and another that uses do/end?
+<p>
+
+
+<h2>Lambda blocks vs Proc blocks vs Arrows</h2>
+
+<p>
+So, some of the above is a bit of a lie.
+See, "Proc blocks" can behave as you've seen so far...
+but "Lambda blocks" behave like methods.
+You can find out what kind you have with the
+<code>lambda?</code> method:
+<p>
+
+<div class="interactive-code">puts Proc.new { }.lambda?
+puts lambda { }.lambda?
+puts -> { }.lambda?</div>
+
+<p>
+There are two ways that they can differ.
+The first is where return goes to.
+The second is how they deal with arguments.
+<p>
+
+<p>
+I'll show you how I would experiment to figure out how the return value works:
+See if you can't figure out how to verify the argument one
+(have you seen "wrong number of arguments" before? What did you do to get that?
+try doing that for the block and proc to see how they behave).
+<p>
+
+<div class="interactive-code">def proc_return
+  Proc.new { return :from_block }.call
+  :from_method
+end
+
+def lambda_return
+  lambda { return :from_lambda }.call
+  :from_method
+end
+
+puts proc_return
+puts lambda_return</div>
+
+<h3>Experiments</h3>
+
+<p>
+What do you think this will return?
+<code>method(:puts).to_proc</code> can you prove it?
+<p>
+
+<p>
+Do both of these attributes (where return returns from, and how arguments match up)
+hold for both <code>lambda</code> and <code>-&lt;</code>?
+<p>
+
+<p>
+What if you define a method from a block?
+If you define a method from a block,
+can you get a method that behaves like a proc instead of a lambda?
+<p>
+
+<p>
+There's another method that does a similar thing:
+<code>proc</code> how does this one behave?
+If you have access to Ruby 1.8, run these same experiments there...
+do you get the same results?
+<p>
+
+
+<h2>Passing blocks from a local variable</h2>
+
+<p>
+Sometimes you have a block as a Proc in a local variables,
+and you have a method that wants a block.
+You can pass the block using the
+<code>&syntax<code> where you invoke it.
+<p>
+
+<p>
+What do you expect this to print?
+<p>
+
+<div class="interactive-code">def block1(&block)
+  block2(&block)
+end
+
+def block2(&block)
+  block.call(1)
+end
+
+block1 { |n| puts "Got #{n}" }</div>
+
+
+<h3>Experiments</h3>
+
+<p>
+If you passed the block as a local variable, can the next method invoke it with yield?
+<p>
+
+<p>
+Can you do this with both Lambda style and Proc style blocks?
+<p>
+
+<p>
+Does this work with local variables you defined through
+<code>Proc.new</code> and <code>lambda</code>?
+<p>
+
+<p>
+Can you pass these blocks to things like <code>Array#map</code>?
+<p>
+
+<p>
+What will happen here?
+<code>[1,2,3].each(&method(:puts).to_proc)</code>
+<p>
+
+<p>
+What if you ran the above example without the
+<code>to_proc</code> method?
+Why might that have worked or not worked?
+Can you think of a way to check this?
+<p>
+
+
+<h2>Bindings return a binding into the block's closure</h2>
+
+<p>
+There is a method that all objects inherit, called <code>binding</code>,
+which returns the current binding. This is where local variables are stored,
+and what determines what <code>self</code> is.
+<p>
+
+<p>
+This is made private, because it's implemented in such a way that implementation
+details leak out and it makes no goddam sense:
+<p>
+
+<div class="interactive-code">puts Object.new.send(:binding).eval('self')
+</div>
+
+<p>
+But you can call <code>binding</code> on a block,
+and it will give you a binding into its closure.
+<p>
+
+<div class="interactive-code">def print_block_locals(&block)
+  p block.binding.eval('local_variables')
+end
+
+a, b = 1, 2
+print_block_locals { }</div>
+
+<h3>Experiments</h3>
+
+<p>
+If there were local variables in the block above,
+would it print them, as well?
+<p>
+
+<p>
+Find a way to get two different objects (you can check with <code>object_id</code>)
+to have a reference to the same block. Is their <code>self</code> the same?
+(You'll need to <code>eval("self")</code>
+on the block's binding, the same way we eval'd <code>local_variables</code>).
+<p>
+
+<h2>You can change the value of <code>self</code></h2>
+
+<p>
+So here's some black fucking magic for you.
+And I'm not telling you to go do this, because, I'm not your parents.
+But I want what's best for you, so I'll just tell you that metaprogramming is the devil's work,
+but your other instructors and I, we know that you're curious about these things,
+and all your friends are experimenting with metaprogramming.
+So, we'd rather you experiment here in school, where it's safe.
+<p>
+
+<p>
+So, we've seen <code>eval</code>, which, you've probably heard is evil,
+but if you really wanted to turn it up to eleven, then read on.
+A block
+<a href="https://github.com/ruby/ruby/blob/ab38e5b5851288753e841182f112d778d713dc91/vm_core.h#L524">has a reference to self</a>,
+So if Ruby exposed a way to change the value of self for a block... well...
+<p>
+
+<div class="interactive-code">"abc".instance_eval { p self }
+123.instance_eval { p self }</div>
+
+<p>
+Now, you'll quickly find yourself frustrated because you can't pass arguments to the block.
+There's a decent solution available, though. Try calling <code>methods</code> on the block,
+do you see any that look promising? (their names are similar to <code>instance_eval</code>,
+and you can filter the results by calling <code>grep</code> on them and passing it a regex).
+Can you find the method? Can you find its limitations?
+<a href="https://www.youtube.com/watch?v=IXLDv-fUINM">Here's a hint</a>.
+<p>
+
+<p>
+<strong>WARNING</strong> The following material may has been known to cause epistemological unsettledness.
+<p>
+
+<p>
+And now, if you really want to revel with the devil,
+figure out what the difference is between
+<code>instance_eval</code> and <code>class_eval/module_eval</code>.
+And then, to truly stare into the abyss,
+figure out how Ruby is able to accomodate these differences.
+Be sure to say goodbye to your loved ones.
+For one day, dear student, you may wake up wide-eyed and realize that metaprogramming is just programming.
+And all that shit you thought was programming? All those keywords?
+The <code>class</code>, the <code>module</code>, the <code>def</code>...
+how in the fuck do they pull that off?
+And then you will see: everything you believed is a lie.
+<p>
+
+
+<h2>The transition from Proc to block and back remembers what object it is</h2>
+
+<p>
+Here's some more magic for you. When ou pass a Proc through the block slot,
+it retains its idenity on the other side.
+<p>
+
+<div class="interactive-code">def m1(&b)
+  p b.object_id
+  m2(&b)
+end
+
+def m2(&b)
+  p b.object_id
+end
+
+m1 { }
+</div>
+
+
+<h2>You can turn a method into a block, but not an unbound method</h2>
+
+<p>
+So here's one that will seem strange at first.
+think about why this might be.
+<p>
+
+<div class="interactive-code">def m(&b)
+  p b.call
+end
+
+# the method
+m(&method(:object_id))
+
+# the instance method bound to main
+m(&method(:object_id).owner.instance_method(:object_id).bind(self))
+
+# the unbound instance method
+m(&method(:object_id).owner.instance_method(:object_id))</div>
+
+
+<h2>Some challenges!</h2>
+
+<p>
+Create a class that is initialized with a block,
+saves it in an instance variable,
+and doesn't invoke it until you call <code>omghi</code> on it.
+<p>
+
+<hr />
+
+<p>
+Fill in the body of <code>b2</code> to get it to print 3.
+<p>
+
+<div class="interactive-code">b1 = lambda { 2 }
+b2 = lambda {  } # what can you put in the block to get it to print 3?
+
+puts b2.call(1, &b1)</div>
+
+<hr />
+
+<p>
+Write your own map method: It takes an array and a block.
+Each item in the array is passed to the block.
+The method returns an array of items that were returned by the block.
+<p>
+
+<hr />
+
+<p>
+Write your own select method: It takes an array and a block.
+Each item in the array is passed to the block.
+The method returns an array of items for which the block returned true.
+<p>
