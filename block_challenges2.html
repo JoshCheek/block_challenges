@@ -1,44 +1,60 @@
-<h1>How I Learned To Stop Worrying And Love The Block</h1>
+<h1><a href="https://www.youtube.com/watch?v=sbyj1-xra70">Block it up and do it again</a></h1>
 
-<strong>Harder, better, faster, stronger</strong>
 
-<h2>Blocks aren't counted with arity</h2>
-
-<p>
-Arity is the number of arguments that a method takes.
-<p>
+<h2>Passing blocks from a local variable</h2>
 
 <p>
-What do you think the arity will be for these methods?
-Go ahead and guess,
-then mimic the first line against the other methods to find out if you're right.
+Sometimes you have a block as a Proc in a local variables,
+and you have a method that wants a block.
+You can pass the block using the
+<code>&syntax<code> where you invoke it.
 <p>
 
 <p>
-The last one is a little tricky,
-read the title of this section before you answer it :)
+What do you expect this to print?
 <p>
 
-<div class="interactive-code">def a
-end
-puts method(:a).arity
-
-def b(arg)
+<div class="interactive-code">def block1(&block)
+  block2(&block)
 end
 
-def c(arg1, arg2)
+def block2(&block)
+  block.call(1)
 end
 
-def d(arg1, arg2, &block)
-end</div>
+block1 { |n| puts "Got #{n}" }</div>
+
+
+<h3>Experiments</h3>
 
 <p>
-Can you think of any other arugment types?
-Are you able to guess how they affect arity?
-Were any of your guesses wrong?
-If so, can you think of a reason you might have gotten a different answer than you expected?
+If you passed the block as a local variable, can the next method invoke it with yield?
 <p>
 
+<p>
+Can you do this with both Lambda style and Proc style blocks?
+<p>
+
+<p>
+Does this work with local variables you defined through
+<code>Proc.new</code> and <code>lambda</code>?
+<p>
+
+<p>
+Can you pass these blocks to things like <code>Array#map</code>?
+<p>
+
+<p>
+What will happen here?
+<code>[1,2,3].each(&method(:puts).to_proc)</code>
+<p>
+
+<p>
+What if you ran the above example without the
+<code>to_proc</code> method?
+Why might that have worked or not worked?
+Can you think of a way to check this?
+<p>
 
 <h2>Block param when no block is given</h2>
 
@@ -52,6 +68,7 @@ Try passing a block, what do you think it will be?
 end
 
 m</div>
+
 
 <h2>Alternative way to work with blocks</h2>
 
@@ -97,109 +114,137 @@ like we've been doing above?
 <p>
 
 
-
-<h2>Destructuring arguments</h2>
-
-<p>
-Get ready to "whaaaaa?! O.o"
-So, block assignment is like local variable assignment.
-Here, we can use destructuring to extract arguments from an array.
-<p>
-
-<div class="interactive-code">a = [1, 2]
-p a
-lambda { |a| p a }.call([1, 2])
-
-a, b = [1, 2]
-p a, b
-lambda { |a, b| p a, b }.call([1, 2])
-</div>
+<h2>Every method takes a block</h2>
 
 <p>
-You can have multiple layers of destructuring through parentheses.
+Whether the method says so or not, it takes a block.
+</p>
+
+<div class="interactive-code">def noblock_method
+end
+noblock_method { puts "noblock_method" }
+
+def block_method(&block)
+end
+block_method { puts "block_method" }
+
+def block_call(&block)
+  block.call
+end
+block_call { puts "block_call" }</div>
+
+<h3>Experiments!!</h3>
+
+<p>
+What would happen if you called the block twice in <code>block_call</code>?
 <p>
 
-<div class="interactive-code">(a, (b, c), (d, e)) = [1, [2, 3], [4, 5]]
-p a, b, c, d, e</div>
+<p>
+What would happen if you passed a block to <code>puts</code>,
+<code>local_variables</code>, and <code>Object.class</code>?
+Why did that happen?
+<p>
 
-<h3>Thoughts</h3>
+
+<h2>Blocks aren't counted with arity</h2>
 
 <p>
-Where might something like this be useful?
+Arity is the number of arguments that a method takes.
 <p>
+
+<p>
+What do you think the arity will be for these methods?
+Go ahead and guess,
+then mimic the first line against the other methods to find out if you're right.
+<p>
+
+<p>
+The last one is a little tricky,
+read the title of this section before you answer it :)
+<p>
+
+<div class="interactive-code">def a
+end
+puts method(:a).arity
+
+def b(arg)
+end
+
+def c(arg1, arg2)
+end
+
+def d(arg1, arg2, &block)
+end</div>
+
+<p>
+Can you think of any other arugment types?
+Are you able to guess how they affect arity?
+Were any of your guesses wrong?
+If so, can you think of a reason you might have gotten a different answer than you expected?
+<p>
+
+
+<h2>Lambda blocks vs Proc blocks vs Arrows</h2>
+
+<p>
+So, some of the above is a bit of a lie.
+See, "Proc blocks" can behave as you've seen so far...
+but "Lambda blocks" behave like methods.
+You can find out what kind you have with the
+<code>lambda?</code> method:
+<p>
+
+<div class="interactive-code">puts Proc.new { }.lambda?
+puts lambda { }.lambda?
+puts -> { }.lambda?</div>
+
+<p>
+There are two ways that they can differ.
+The first is where return goes to.
+The second is how they deal with arguments.
+<p>
+
+<p>
+I'll show you how I would experiment to figure out how the return value works:
+See if you can't figure out how to verify the argument one
+(have you seen "wrong number of arguments" before? What did you do to get that?
+try doing that for the block and proc to see how they behave).
+<p>
+
+<div class="interactive-code">def proc_return
+  Proc.new { return :from_block }.call
+  :from_method
+end
+
+def lambda_return
+  lambda { return :from_lambda }.call
+  :from_method
+end
+
+puts proc_return
+puts lambda_return</div>
 
 <h3>Experiments</h3>
 
 <p>
-Hashes are key/value pairs. These are passed to the block as an array.
-Show that you can receive the pair if you want (the array),
-or use destructuring to get the key/value pair.
+What do you think this will return?
+<code>method(:puts).to_proc</code> can you prove it?
 <p>
 
 <p>
-Does this work for keyword arguments, too?
+Do both of these attributes (where return returns from, and how arguments match up)
+hold for both <code>lambda</code> and <code>-&lt;</code>?
 <p>
 
 <p>
-Do methods work with this kind of assignment?
+What if you define a method from a block?
+If you define a method from a block,
+can you get a method that behaves like a proc instead of a lambda?
 <p>
 
 <p>
-Can you destructure three levels deep?
+There's another method that does a similar thing:
+<code>proc</code> how does this one behave?
+If you have access to Ruby 1.8, run these same experiments there...
+do you get the same results?
 <p>
-
-
-<h2>Curly braces vs do/end</h2>
-
-<p>
-For the most part, people treat curly braces and do/end as if they are interchangeable.
-But there is one tricky difference. Curly braces will be passed as an argument to the
-method call directly to their left. But <code>do/end</code>
-will be passed as an argument to the
-method call farthest to their left.
-<p>
-
-<div class="interactive-code"># The asterisk causes the method to ignore any arguments that are given to it
-# Not part of this material, but can you think of why this might be?
-def a(*)
-  puts "a: #{block_given?}"
-end
-
-def b(*)
-  puts "b: #{block_given?}"
-end
-
-def c(*)
-  puts "c: #{block_given?}"
-end
-
-a b { }
-puts "----------"
-a b do
-end
-</div>
-
-
-<h3>Experiments</h3>
-
-<p>
-What if you called <code>a b c</code>
-with curly braces and do/end?
-Which method do you think they would be assigned to?
-Try it to see if you are right :)
-<p>
-
-<p>
-If you wanted to use curly braces,
-but didn't want the block to go to the method direclty to their left,
-what could you do to get them to be passed to the correct method?
-<p>
-
-<p>
-You've seen this before.
-Think about Rake tasks, have you ever seen curly braces in a rake task?
-If not, why not, and can you find a way to use curly braces instead of do/end?
-Think about RSpec test suites, can you define a test that uses curly braces,
-and another that uses do/end?
-<p>
-
